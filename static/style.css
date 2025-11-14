@@ -1,0 +1,160 @@
+/* ... [保留所有之前的 CSS 樣式] ... */
+
+/* 新增的樣式 */
+#comparison-result {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0f2f5;
+}
+
+.score-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #1877f2;
+}
+
+.score-display .percentage {
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.result-message {
+    font-size: 1.2em;
+    color: #606770;
+    margin-top: 10px;
+}
+
+#fingerprint-details-container {
+    margin-top: 30px;
+}
+
+#fingerprint-details {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+#fingerprint-details th,
+#fingerprint-details td {
+    border: 1px solid #dddfe2;
+    padding: 10px;
+    text-align: left;
+    word-break: break-all;
+}
+
+#fingerprint-details th {
+    background-color: #f5f6f7;
+    font-weight: 600;
+}
+
+#fingerprint-details td:last-child {
+    text-align: center;
+    font-weight: bold;
+}
+
+.status-match {
+    color: #31a24c; /* Green */
+}
+
+.status-mismatch {
+    color: #fa383e; /* Red */
+}
+
+#reset-fingerprint {
+    display: block;
+    width: 200px;
+    margin: 30px auto 0;
+    padding: 10px 15px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #fa383e;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#reset-fingerprint:hover {
+    background-color: #e52e34;
+}
+
+/* 新增的摘要區域樣式 */
+#identity-summary {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    border-radius: 8px;
+    background-color: #e7f3ff; /* A light blue background */
+    border: 1px solid #b3d7ff;
+}
+
+#identity-summary p {
+    margin: 5px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+#identity-summary .uuid {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    background-color: #d1e7fd;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #0d6efd;
+    word-break: break-all;
+}
+
+#identity-summary .match-status {
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-top: 10px;
+}
+
+.status-new-user {
+    color: #0f5132; /* Green */
+}
+
+.status-match-found {
+    color: #842029; /* Red */
+}
+
+/* 修改表格最後一列的對齊方式 */
+#fingerprint-details td:last-child {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 新增的噪音警報樣式 */
+#noise-alert {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff3cd; /* Warning yellow */
+    border: 1px solid #ffeeba;
+    color: #856404;
+}
+
+#noise-alert .alert-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#noise-alert p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+#noise-alert ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+#noise-alert li {
+    margin-bottom: 5px;
+}
+
