@@ -121,6 +121,36 @@ def compare_fingerprints(current_stable, stored_stable, stored_noise_report={}):
 ```
 這段程式碼展示了演算法的智慧之處：它信任並利用了歷史紀錄中的噪音報告，從而能更準確地識別那些試圖透過噪音來隱藏身分的用戶。
 
+## 🧩 第三方資源與授權 (Third-Party Components & Licenses)
+
+本專案的運作依賴於以下優秀的開源函式庫與社群維護的資料清單。我們對這些專案的貢獻者表示誠摯的感謝。
+
+### Three.js
+
+*   **用途**: 用於執行進階的 WebGL 渲染測試，以獲取更深層次的 GPU 指紋。
+*   **官網**: [https://threejs.org/](https://threejs.org/)
+*   **授權**: MIT License
+*   **版權**: Copyright © 2010-2024 three.js authors.
+
+### 廣告攔截過濾清單 (Ad-Blocking Filter Lists)
+
+*   **用途**: 前端 `main.js` 中的進階廣告攔截器偵測功能會從以下公開的 URL 動態拉取過濾規則，以生成 DOM "誘餌" 元素進行測試。本專案**不儲存或重新分發**這些清單，僅在客戶端執行時進行即時引用。
+*   **來源與授權**:
+    *   **EasyList**: 由社群維護，主要採用 [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) 和部分 GPLv3 授權。
+        *   `https://easylist.to/easylist/easylist.txt`
+        *   `https://easylist.to/easylist/easyprivacy.txt`
+        *   `https://easylist-downloads.adblockplus.org/easylistchina.txt`
+    *   **Fanboy's Lists**: 由社群維護，授權方式與 EasyList 相似。
+        *   `https://easylist.to/easylist/fanboy-annoyance.txt`
+        *   `https://secure.fanboy.co.nz/fanboy-cookiemonster.txt`
+    *   **uBlock Origin Assets**: 該專案的過濾清單主要採用 [GPLv3 License](https://github.com/uBlockOrigin/uAssets/blob/master/LICENSE.txt) 授權。
+        *   `https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt`
+        *   `https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt`
+    *   **Xinggsf's Adblock Plus Rule**: 該專案採用 [GPLv3 License](https://github.com/xinggsf/Adblock-Plus-Rule/blob/master/LICENSE) 授權。
+        *   `https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt`
+
+我們尊重所有過濾清單維護者的辛勤工作，並嚴格遵守其授權條款。本專案對這些清單的使用方式僅限於學術性的偵測研究。
+
 ## 📜 授權條款 (License)
 
 本專案採用 [MIT License](https://opensource.org/licenses/MIT) 授權。這意味著您可以自由地使用、複製、修改、合併、發布、散佈、再授權及/或銷售本軟體的副本，但前提是必須包含原始的版權聲明和此授權聲明。
