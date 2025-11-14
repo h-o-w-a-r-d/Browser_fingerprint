@@ -1,5 +1,9 @@
 # 進階瀏覽器指紋識別服務 (Advanced Browser Fingerprinting Service)
 
+---
+**[English Version Available (點此查看英文版)](README.en.md)**
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 一份用於學術研究與教育目的的全端 Web 應用程式，旨在深入展示現代瀏覽器指紋識別的技術、挑戰與應對策略。
