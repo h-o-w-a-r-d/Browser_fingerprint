@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階瀏覽器指紋識別服務</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>瀏覽器指紋識別服務</h1>
+        <p class="subtitle">基於全域比對的訪客身分分析</p>
+        
+        <!-- 用於顯示分析結果摘要的區域 -->
+        <div id="identity-summary">
+            <div class="loading">正在採集指紋並與全域數據庫進行比對...</div>
+        </div>
+
+        <!-- 新增：用於顯示噪音警報的區域 -->
+        <div id="noise-alert" style="display: none;"></div>
+        
+        <div id="fingerprint-details-container" style="display: none;">
+            <h2>身分識別特徵比對分析</h2>
+            <table id="fingerprint-details">
+                <thead>
+                    <tr>
+                        <th>特徵點</th>
+                        <th>當前數值</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS will populate this -->
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="reset-fingerprint">清除我的識別紀錄</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
