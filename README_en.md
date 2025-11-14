@@ -1,5 +1,9 @@
 # Advanced Browser Fingerprinting Service
 
+---
+**[中文版本 (Switch to Chinese Version)](README.md)**
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A full-stack web application for academic research and educational purposes, designed to provide an in-depth demonstration of the techniques, challenges, and countermeasures of modern browser fingerprinting.
@@ -26,10 +30,7 @@ The authors and contributors of this project **are not responsible** for any con
 * **Cross-Session Visitor Identification**: Through server-side matching and cookie rewriting, visitors have a high probability of being re-identified even if they clear local storage or use incognito mode (provided cookies are not completely blocked).
 * **Clear Results Visualization**: The front-end interface clearly displays the visitor ID, match status, similarity score, and a detailed comparison of each feature point.
 
----
 
-**[中文版本 (Switch to Chinese Version)](README.md)**
----
 
 ## 🏛️ Technical Architecture
 
