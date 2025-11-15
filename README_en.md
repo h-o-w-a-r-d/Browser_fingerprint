@@ -1,4 +1,4 @@
-# Advanced Browser Fingerprinting Service
+# Simple Browser Fingerprinting Service
 
 ---
 **[中文版本 (Switch to Chinese Version)](README.md)**
