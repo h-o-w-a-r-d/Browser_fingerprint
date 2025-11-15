@@ -167,7 +167,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         fingerprintData['可用螢幕大小'] = `${screen.availWidth}x${screen.availHeight}`;
         fingerprintData['色彩深度'] = screen.colorDepth;
         fingerprintData['是否啟用 Cookie'] = navigator.cookieEnabled;
+        // --- 新增這一行 ---
+        fingerprintData['WebDriver 標記'] = navigator.webdriver;
     }
+    
 
     // 3.2: Hardware Info
     function getHardwareInfo() {
@@ -206,23 +209,30 @@ document.addEventListener('DOMContentLoaded', async function () {
         fingerprintData['Math 函數精度'] = results.join(',');
     }
 
-    // 3.6: Advanced WebGL Fingerprint
-    function getAdvancedWebGLFingerprint() {
+    // 3.6: Advanced WebGL Fingerprint -> 已升級為 Detailed WebGL Fingerprint
+    function getDetailedWebGLFingerprint() {
         try {
             const canvas = document.createElement('canvas');
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
             if (!gl) {
-                fingerprintData['WebGL 渲染器'] = '不支援';
+                fingerprintData['WebGL 詳細參數'] = '不支援';
                 return;
             }
             const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            if (debugInfo) {
-                fingerprintData['WebGL 渲染器'] = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            } else {
-                fingerprintData['WebGL 渲染器'] = '無法獲取除錯資訊';
-            }
+            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '無法獲取渲染器';
+            
+            const extensions = gl.getSupportedExtensions().join(',');
+
+            const params = [
+                'MAX_TEXTURE_SIZE', 'MAX_VIEWPORT_DIMS', 'MAX_CUBE_MAP_TEXTURE_SIZE',
+                'MAX_RENDERBUFFER_SIZE', 'MAX_VERTEX_ATTRIBS',
+            ].map(p => gl.getParameter(gl[p])).join(',');
+            
+            // 將多個信號合併為一個強大的指紋
+            fingerprintData['WebGL 詳細參數'] = `${renderer}|${extensions}|${params}`;
+
         } catch (e) {
-            fingerprintData['WebGL 渲染器'] = '獲取失敗';
+            fingerprintData['WebGL 詳細參數'] = '獲取失敗';
         }
     }
 
@@ -551,6 +561,126 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    // 3.16: Installed Fonts List
+    function getFontFingerprint() {
+        try {
+            const fontList = [
+                // Common Windows fonts
+                'Arial', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Courier New', 'Segoe UI',
+                // Common macOS fonts
+                'Helvetica', 'Geneva', 'Lucida Grande', 'Baskerville', 'Gill Sans', 'San Francisco',
+                // Common Linux fonts
+                'DejaVu Sans', 'Liberation Sans', 'Ubuntu',
+                // Other common fonts
+                'Comic Sans MS', 'Impact', 'Consolas', 'Menlo'
+            ];
+            const baseElement = document.createElement('span');
+            baseElement.style.fontSize = '72px';
+            baseElement.innerHTML = 'mwmwmwmwlliilliil';
+            
+            const genericSpan = document.createElement('span');
+            genericSpan.style.fontFamily = 'monospace';
+            document.body.appendChild(genericSpan);
+            const genericWidth = genericSpan.offsetWidth;
+            const genericHeight = genericSpan.offsetHeight;
+            document.body.removeChild(genericSpan);
+
+            const availableFonts = fontList.filter(font => {
+                const testSpan = document.createElement('span');
+                testSpan.style.fontFamily = `'${font}',monospace`;
+                document.body.appendChild(testSpan);
+                const isAvailable = testSpan.offsetWidth !== genericWidth || testSpan.offsetHeight !== genericHeight;
+                document.body.removeChild(testSpan);
+                return isAvailable;
+            });
+            fingerprintData['字體指紋'] = availableFonts.join(',');
+        } catch(e) {
+            fingerprintData['字體指紋'] = '獲取失敗';
+        }
+    }
+
+    // 3.17: User-Agent Client Hints
+    function getUAClientHints() {
+        return new Promise(async (resolve) => {
+            if (!navigator.userAgentData) {
+                fingerprintData['User-Agent Client Hints'] = '不支援';
+                return resolve();
+            }
+            try {
+                const highEntropyValues = await navigator.userAgentData.getHighEntropyValues([
+                    "platform", "platformVersion", "architecture", "model", "uaFullVersion"
+                ]);
+                // 將品牌資訊和高熵值合併
+                const allHints = { ...navigator.userAgentData, ...highEntropyValues };
+                fingerprintData['User-Agent Client Hints'] = JSON.stringify(allHints);
+            } catch (e) {
+                fingerprintData['User-Agent Client Hints'] = '獲取失敗';
+            }
+            resolve();
+        });
+    }
+
+    // 3.18: Permissions API State
+    function getPermissionsFingerprint() {
+        return new Promise(async (resolve) => {
+            try {
+                const permissionsToQuery = ['geolocation', 'notifications', 'camera', 'microphone', 'background-sync'];
+                const results = await Promise.allSettled(
+                    permissionsToQuery.map(p => navigator.permissions.query({ name: p }))
+                );
+                const states = results.map((result, index) => {
+                    const name = permissionsToQuery[index];
+                    if (result.status === 'fulfilled') {
+                        return `${name}:${result.value.state}`;
+                    }
+                    return `${name}:error`;
+                });
+                fingerprintData['權限狀態'] = states.join(',');
+            } catch (e) {
+                fingerprintData['權限狀態'] = '不支援或獲取失敗';
+            }
+            resolve();
+        });
+    }
+    
+    // 3.19: WebRTC Local IP
+    function getWebRTCIP() {
+        return new Promise((resolve) => {
+            try {
+                const pc = new RTCPeerConnection({ iceServers: [] });
+                pc.createDataChannel('');
+                pc.createOffer().then(offer => pc.setLocalDescription(offer));
+                
+                const ipRegex = /(192\.168\.[0-9]{1,3}\.[0-9]{1,3}|10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.[0-9]{1,3}\.[0-9]{1,3})/;
+                let ipFound = false;
+
+                const timeoutId = setTimeout(() => {
+                    if (!ipFound) {
+                        fingerprintData['WebRTC 本地 IP'] = '超時';
+                        if (pc.signalingState !== 'closed') pc.close();
+                        resolve();
+                    }
+                }, 1500);
+
+                pc.onicecandidate = (event) => {
+                    if (ipFound || !event || !event.candidate || !event.candidate.candidate) return;
+                    
+                    const match = ipRegex.exec(event.candidate.candidate);
+                    if (match) {
+                        clearTimeout(timeoutId);
+                        ipFound = true;
+                        fingerprintData['WebRTC 本地 IP'] = match[1];
+                        if (pc.signalingState !== 'closed') pc.close();
+                        resolve();
+                    }
+                };
+            } catch (e) {
+                fingerprintData['WebRTC 本地 IP'] = '不支援或被禁用';
+                resolve();
+            }
+        });
+    }
+
 
     // =================================================================
     // SECTION 4: ORCHESTRATION AND DISPLAY
@@ -613,8 +743,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         getNetworkInfo();
         getDoNotTrack();
         getMathPrecision();
-        getAdvancedWebGLFingerprint();
+        getDetailedWebGLFingerprint(); // <-- 使用升級後的函式
         analyzeClientRectsFingerprint();
+        getFontFingerprint(); // <-- 新增同步函式
 
         console.log('2. [DEBUG] Sync functions complete. Starting async collection...');
 
@@ -629,7 +760,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             getSpeechVoices(),
             getTimingAttackFingerprint(),
             getThreeJsFingerprint(),
-            getWebGPUFingerprint()
+            getWebGPUFingerprint(),
+            getUAClientHints(), // <-- 新增非同步函式
+            getPermissionsFingerprint(), // <-- 新增非同步函式
+            getWebRTCIP(), // <-- 新增非同步函式
         ]);
 
         console.log('3. [DEBUG] Async collection complete. Preparing to send to server...');
